@@ -1,0 +1,21 @@
+Package: testicles
+Type: Package
+Title: Tests 'rticles' package Rmarkdown templates for compatibility with universal format
+Version: 0.1.0
+Authors@R: c(
+  person("David M.", "Kaplan", role = c("aut", "cre", "cph"), email = "dmkaplan2000@gmail.com", comment = c(ORCID = "0000-0001-6087-359X", github = "dmkaplan2000"))
+  )
+Description: 'rticles' provides the capability of writing papers in Rmarkdown, but
+    each journal format has its own style for the Rmarkdown document and some formats
+    currently lack features that would be useful. The goal of this package is to 
+    provide a standard "universal" template for an 'rticles' Rmarkdown document that
+    has the minimum set of features that should be shared by all journal formats and
+    test that those features work with all 'rticles' templates.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+URL: https://github.com/dmkaplan2000/testicles
+Depends: R (> 3.5.0)
+Imports: knitr, xfun (>= 0.16), methods, rticles, rmarkdown
+RoxygenNote: 7.1.1
+VignetteBuilder: knitr
