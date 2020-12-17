@@ -1,0 +1,51 @@
+---
+title: "Design considerations for universal rticles format"
+author: "David M. Kaplan"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The `rticles` package provides a set of templates for writing entire publications in Rmarkdown. However, the templates for individual journals were largely implemented independently from each other, leading to differences in format and functionality. The goal of this document is to identify what characteristics are desirable for creating a universal Rmarkdown format that has many shared characteristics across all journal templates.
+
+# Notes
+
+* A lot of the more desirable functionality in the YAML header, such as separating addresses from authors and using a pointer between the two, comes not from the Pandoc template, but from TeX macros in the specific journal style.
+* This means that getting that functionality in journal styles lacking those macros will require modifying the journal style
+    - This seems harder than it should be
+* Pandoc templates seem to have no way to assign a value to a variable or to extract a specific element of an array, and especially cannot do this using the contents of another variable as the reference.
+
+
+# YAML header
+
+* `author` should be a multi-element array of author names and contact information
+    - Subfields should include at least `name`, `affiliation`, `email`, `telephone`, `corresponding_author` and `orcid`
+    - Journal template doesn't have to use all of these fields, but having them should not cause errors
+    - `affiliation` should be a pointer into the `affiliations` array
+* `address` should be a multi-element array of affiliations
+    - Elsevier seems to get both `address` and `author` correct, but appears to use some TeX code in elsarticle format to access specific elements of array
+* `keywords`, `PACS` and `MSC` as arrays of each of these
+* `thanks` field for acknowledgements
+    - Not convinced by the work `thanks`
+* Standard Rmarkdown variables for changing link colors should just work
+* `header-includes`, `include-before` and `include-after` should work as expected to place additional material in the LaTeX header, just before the manuscript body and just after the body
+
+
+# Functionality in main body
+
+* All the functionality in the standard Rmarkdown vanilla template should be present in `rticles` templates
+* Echoing of code chunks should work out of the box
+    - Even if code chunks would be inappropriate in some journals, visualization of code chunks is often useful in the development stage of a manuscript
+* `kable` and `pander` tables should work
+* Tables and figures should be compatible with `endfloat` package to make them appear at end of manuscript
+    - Many journals request this and I find gathering all figures and tables together at the end of the manuscript facilitates reading the manuscript during the manuscript development phase.
