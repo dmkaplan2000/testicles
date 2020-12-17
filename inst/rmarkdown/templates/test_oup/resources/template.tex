@@ -61,6 +61,9 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
+% Local package for dealing with affiliations
+\usepackage{mylocalmacropackage}
+
 % Part for setting citation format package: natbib
 $if(natbib)$
 \usepackage{natbib}
@@ -106,6 +109,7 @@ $if(csl-refs)$
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
 $endif$
 % Pandoc header
 $for(header-includes)$
@@ -114,11 +118,25 @@ $endfor$
 
 \begin{document}
 
+% Create labels for Addresses if the are given in Elsevier format
+$if(address)$
+$for(address)$
+\Newlabel{$address.code$}{$address.address$}
+$endfor$
+$endif$
+
 \title{$title$}
 
 \author{%
 $for(authors)$
-\name{$authors.name$}$if(authors.address)$\address{$authors.address$}$endif$$if(authors.email)$\email{\href{mailto:$authors.email$}{$authors.email$}}$endif$$if(authors.thanks)$\thanks{$authors.thanks$}$else$$if(authors.corresponding_author)$\thanks{Corresponding author; Email: \href{mailto:$authors.email$}{$authors.email$}}$endif$$endif$
+\name{$authors.name$}
+$if(authors.address)$\address{$authors.address$}$endif$
+$if(authors.affiliation)$
+$for(authors.affiliation)$
+\address{\Ref{$authors.affiliation$}}
+$endfor$
+$endif$
+$if(authors.email)$\email{\href{mailto:$authors.email$}{$authors.email$}}$endif$$if(authors.thanks)$\thanks{$authors.thanks$}$else$$if(authors.corresponding_author)$\thanks{Corresponding author; Email: \href{mailto:$authors.email$}{$authors.email$}}$endif$$endif$
 $sep$\and
 $endfor$
 }

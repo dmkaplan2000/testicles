@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The `rticles` package provides a set of templates for writing entire publications in Rmarkdown. However, the templates for individual journals were largely implemented independently from each other, leading to differences in format and functionality. The goal of this document is to identify what characteristics are desirable for creating a universal Rmarkdown format that has many shared characteristics across all journal templates.
+The `rticles` package provides a set of templates for writing entire publications in Rmarkdown. However, the templates for individual journals were largely implemented independently from each other, leading to differences in format and functionality. The goal of this document is to identify what characteristics are desirable for creating a universal Rmarkdown format that has many shared characteristics across all journal templates. The goal is to make the formats as similar as possible to each other and as similar as possible to the vanilla Rmarkdown syntax for `pdf_document` so that one can easily convert between the different formats.
 
 # Notes
 
@@ -34,9 +34,10 @@ The `rticles` package provides a set of templates for writing entire publication
     - `affiliation` should be a pointer into the `affiliations` array
 * `address` should be a multi-element array of affiliations
     - Elsevier seems to get both `address` and `author` correct, but appears to use some TeX code in elsarticle format to access specific elements of array
-* `keywords`, `PACS` and `MSC` as arrays of each of these
-* `thanks` field for acknowledgements
-    - Not convinced by the work `thanks`
+* `keywords` (and potentially `PACS` and `MSC`) is an array of such words
+* `thanks` or `acknowledgements` field for acknowledgements
+    - Not convinced by the word `thanks`, but used by several formats
+    - Initially, both should work
 * Standard Rmarkdown variables for changing link colors should just work
 * `header-includes`, `include-before` and `include-after` should work as expected to place additional material in the LaTeX header, just before the manuscript body and just after the body
 
@@ -44,8 +45,17 @@ The `rticles` package provides a set of templates for writing entire publication
 # Functionality in main body
 
 * All the functionality in the standard Rmarkdown vanilla template should be present in `rticles` templates
+    - Code chunks, colored links, inline and seperate equations, etc.
 * Echoing of code chunks should work out of the box
     - Even if code chunks would be inappropriate in some journals, visualization of code chunks is often useful in the development stage of a manuscript
-* `kable` and `pander` tables should work
+* `kable` (potentially with `kableExtra`) and `pander` tables should work
 * Tables and figures should be compatible with `endfloat` package to make them appear at end of manuscript
     - Many journals request this and I find gathering all figures and tables together at the end of the manuscript facilitates reading the manuscript during the manuscript development phase.
+    - You can also move figures to the end of a document by embedding code chunks defined earlier in chunks at the end of the document, however, this often does not play nice with the placement of references and will generally not produce an index of figures and tables as `endfloat` does
+* Citations using standard Pandoc format (e.g., `[@myrefid]`) should work as expected.
+    - Some journal formats encourage use of latex commands like `\citep` and `\cite`, but this makes the documents incompatible with other formats.
+    - Would be ideally if Pandoc citations work everywhere.
+* Ideally, one would be able to control placement of the bibliography the same way for all formats
+    - This control is available in `bookdown`, but many other formats have problems with it.
+    - Not sure how easy this would be to implement.
+

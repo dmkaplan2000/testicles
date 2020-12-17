@@ -1,0 +1,5 @@
+% Macros for dealing with affiliations
+\def\Newlabel#1#2{\expandafter\xdef\csname X@#1\endcsname{#2}}
+
+\def\Ref#1{\@ifundefined{X@#1}{0}{\csname X@#1\endcsname}%
+}
