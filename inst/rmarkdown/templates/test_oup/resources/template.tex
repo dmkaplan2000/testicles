@@ -61,8 +61,13 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
-% Local package for dealing with affiliations
-\usepackage{mylocalmacropackage}
+% Macros for dealing with affiliations
+\makeatletter
+\def\Newlabel#1#2#3{\expandafter\xdef\csname #1@#2\endcsname{#3}}
+
+\def\Ref#1#2{\@ifundefined{#1@#2}{???}{\csname #1@#2\endcsname}%
+}
+\makeatother
 
 % Part for setting citation format package: natbib
 $if(natbib)$
@@ -121,7 +126,7 @@ $endfor$
 % Create labels for Addresses if the are given in Elsevier format
 $if(address)$
 $for(address)$
-\Newlabel{$address.code$}{$address.address$}
+\Newlabel{ADR}{$address.code$}{$address.address$}
 $endfor$
 $endif$
 
@@ -133,7 +138,7 @@ $for(authors)$
 $if(authors.address)$\address{$authors.address$}$endif$
 $if(authors.affiliation)$
 $for(authors.affiliation)$
-\address{\Ref{$authors.affiliation$}}
+\address{\Ref{ADR}{$authors.affiliation$}}
 $endfor$
 $endif$
 $if(authors.email)$\email{\href{mailto:$authors.email$}{$authors.email$}}$endif$$if(authors.thanks)$\thanks{$authors.thanks$}$else$$if(authors.corresponding_author)$\thanks{Corresponding author; Email: \href{mailto:$authors.email$}{$authors.email$}}$endif$$endif$
