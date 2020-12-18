@@ -67,7 +67,30 @@
 
 \def\Ref#1#2{\@ifundefined{#1@#2}{???}{\csname #1@#2\endcsname}%
 }
+
+\def\RefFNMK#1{\@ifundefined{FNMK@#1}{\thanks{\Ref{FN}{#1}}\Newlabel{FNMK}{#1}{\footnotemark[1]}}{\Ref{FNMK}{#1}}}
 \makeatother
+
+% Create labels for Addresses if the are given in Elsevier format
+$if(address)$
+$for(address)$
+$if(address.code)$
+\Newlabel{ADR}{$address.code$}{$address.address$}
+$endif$
+$if(address.id)$
+\Newlabel{ADR}{$address.id$}{$address.address$}
+$endif$
+$endfor$
+$endif$
+
+% Create labels for Footnotes if the are given in Elsevier format
+$if(footnote)$
+$for(footnote)$
+$if(footnote.code)$
+\Newlabel{FN}{$footnote.code$}{$footnote.text$}
+$endif$
+$endfor$
+$endif$
 
 % Part for setting citation format package: natbib
 $if(natbib)$
@@ -123,25 +146,25 @@ $endfor$
 
 \begin{document}
 
-% Create labels for Addresses if the are given in Elsevier format
-$if(address)$
-$for(address)$
-\Newlabel{ADR}{$address.code$}{$address.address$}
-$endfor$
-$endif$
-
 \title{$title$}
 
 \author{%
 $for(authors)$
 \name{$authors.name$}
-$if(authors.address)$\address{$authors.address$}$endif$
+$if(authors.address)$\address{$authors.address$}$endif$%
 $if(authors.affiliation)$
 $for(authors.affiliation)$
 \address{\Ref{ADR}{$authors.affiliation$}}
 $endfor$
-$endif$
-$if(authors.email)$\email{\href{mailto:$authors.email$}{$authors.email$}}$endif$$if(authors.thanks)$\thanks{$authors.thanks$}$else$$if(authors.corresponding_author)$\thanks{Corresponding author; Email: \href{mailto:$authors.email$}{$authors.email$}}$endif$$endif$
+$endif$%
+$if(authors.email)$\email{\href{mailto:$authors.email$}{$authors.email$}}$endif$%
+$if(authors.corresponding_author)$\thanks{Corresponding author; Email: \href{mailto:$authors.email$}{$authors.email$}}$endif$%
+$if(authors.thanks)$\thanks{$authors.thanks$}$endif$%
+$if(authors.footnote)$
+$for(authors.footnote)$
+\RefFNMK{$authors.footnote$}
+$endfor$
+$endif$%
 $sep$\and
 $endfor$
 }
