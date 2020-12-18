@@ -61,11 +61,27 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
-% Macros for dealing with affiliations
+% Macros for dealing with affiliations, footnotes, etc.
 \makeatletter
 \def\Newlabel#1#2#3{\expandafter\xdef\csname #1@#2\endcsname{#3}}
 
 \def\Ref#1#2{\@ifundefined{#1@#2}{???}{\csname #1@#2\endcsname}%
+}
+
+\newcommand*\samethanks[1][\value{footnote}]{\footnotemark[#1]}
+
+\newcommand*\ifcounter[1]{%
+  \ifcsname c@#1\endcsname
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi
+}
+
+\newcommand*\thanksbycode[1]{%
+  \ifcounter{FNCT@#1}
+    {\samethanks[\value{FNCT@#1}]}
+    {\thanks{\Ref{FN}{#1}}\newcounter{FNCT@#1}\setcounter{FNCT@#1}{\value{footnote}}}
 }
 
 \def\RefFNMK#1{\@ifundefined{FNMK@#1}{\thanks{\Ref{FN}{#1}}\Newlabel{FNMK}{#1}{\footnotemark[1]}}{\Ref{FNMK}{#1}}}
@@ -162,7 +178,7 @@ $if(authors.corresponding_author)$\thanks{Corresponding author; Email: \href{mai
 $if(authors.thanks)$\thanks{$authors.thanks$}$endif$%
 $if(authors.footnote)$
 $for(authors.footnote)$
-\RefFNMK{$authors.footnote$}
+\thanksbycode{$authors.footnote$}
 $endfor$
 $endif$%
 $sep$\and
